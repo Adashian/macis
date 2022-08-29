@@ -1,5 +1,5 @@
 ../venv/
-macys1/.idea/
+.idea/
 **/__pycache__/
 .env
 .DS_Store
