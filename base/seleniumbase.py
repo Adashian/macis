@@ -1,3 +1,4 @@
+from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as ec
@@ -9,7 +10,7 @@ class SeleniumBase:
 
     def __init__(self, driver):
         self.driver = driver
-        self.__wait = WebDriverWait(self.driver, 10)
+        self.__wait = WebDriverWait(self.driver, 10, 0.5 ,ignored_exceptions=[StaleElementReferenceException])
 
     def __get_selenium_by(self, find_by: str) -> dict:
         find_by = find_by.lower()
@@ -45,5 +46,12 @@ class SeleniumBase:
         return self.__wait.until(ec.presence_of_all_elements_located((self.__get_selenium_by(find_by), locator)),
                                  locator_name)
 
-    def get_element(self):
-        pass
+    def get_text_from_web_elements(self, elements: List[WebElement]) -> List[str]:
+        return [element.text for element in elements]
+
+    def get_element_by_text(self, elements: List[WebElement], text: str) -> WebElement:
+        text = text.lower()
+        return [element for element in elements if element.text.lower() == text][0]
+
+    def delete_cookie(self, cookie_name: str) -> None:
+        self.driver.delete_cookie(cookie_name)

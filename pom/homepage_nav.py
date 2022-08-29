@@ -1,9 +1,9 @@
 from typing import List
 
-from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 
 from base.seleniumbase import SeleniumBase
+from base.utils import Utils
 
 
 class HomepageNav(SeleniumBase):
@@ -21,7 +21,11 @@ class HomepageNav(SeleniumBase):
         self.is_present('css', '#closeButton', 'Button for close add').click()
         return self
 
-    def get_nal_links_text(self) -> str:
+    def get_nav_links_text(self) -> str:
         nav_links = self.get_nav_links()
-        nav_links_text = [link.text for link in nav_links]
-        return ','.join(nav_links_text)
+        nav_links_text = self.get_text_from_web_elements(nav_links)
+        return Utils.join_strings(nav_links_text)
+
+    def get_nav_link_by_text(self, name) -> WebElement:
+        elements = self.get_nav_links()
+        return self.get_element_by_text(elements, name)
